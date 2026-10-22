@@ -30,7 +30,12 @@ async function multipart(build: (form: FormData) => void) {
 
 test("a raw HTML body is printed with the options from the query", async () => {
   const { app, calls } = await setup()
-  const res = await app.inject({ method: "POST", url: "/convert?paper=Letter&landscape=1", headers: { "content-type": "text/html" }, payload: "<h1>hi</h1>" })
+  const res = await app.inject({
+    method: "POST",
+    url: "/convert?paper=Letter&landscape=1",
+    headers: { "content-type": "text/html" },
+    payload: "<h1>hi</h1>",
+  })
   assert.equal(res.statusCode, 200)
   assert.equal(res.headers["content-type"], "application/pdf")
   assert.match(String(res.headers["content-disposition"]), /filename="document.pdf"/)
@@ -55,7 +60,11 @@ test("Markdown, text and images are turned into HTML pages", async () => {
 
 test("a JSON body converts a URL with its options", async () => {
   const { app, calls } = await setup()
-  const res = await app.inject({ method: "POST", url: "/convert", payload: { url: "https://example.com/page", options: { media: "screen" } } })
+  const res = await app.inject({
+    method: "POST",
+    url: "/convert",
+    payload: { url: "https://example.com/page", options: { media: "screen" } },
+  })
   assert.equal(res.statusCode, 200)
   const call = calls[0]
   assert.deepEqual(call.source, { url: "https://example.com/page" })

@@ -63,15 +63,15 @@ The PDF is named after the first file, or after `filename` when given: `Content-
 
 Options can be given as query parameters, as multipart fields, or in the JSON `options` object. Unknown options are refused, so a typo never goes unnoticed.
 
-| Option       | Default | Values                                                                    |
-| ------------ | ------- | ------------------------------------------------------------------------- |
-| `paper`      | `A4`    | `A3`, `A4`, `A5`, `Letter`, `Legal`, `Tabloid`                            |
-| `landscape`  | `false` | `true` / `false`                                                          |
-| `margin`     | `1cm`   | a length applied to all four sides: `0`, `10mm`, `1cm`, `0.5in`, `20px`    |
-| `background` | `true`  | print background colours and images                                       |
-| `scale`      | `1`     | `0.1` to `2`                                                              |
-| `media`      | `print` | `print`, or `screen` to keep a page's on-screen styles                    |
-| `waitUntil`  | `load`  | `load`, `domcontentloaded`, or `networkidle` for pages that load late     |
+| Option       | Default | Values                                                                  |
+| ------------ | ------- | ----------------------------------------------------------------------- |
+| `paper`      | `A4`    | `A3`, `A4`, `A5`, `Letter`, `Legal`, `Tabloid`                          |
+| `landscape`  | `false` | `true` / `false`                                                        |
+| `margin`     | `1cm`   | a length applied to all four sides: `0`, `10mm`, `1cm`, `0.5in`, `20px` |
+| `background` | `true`  | print background colours and images                                     |
+| `scale`      | `1`     | `0.1` to `2`                                                            |
+| `media`      | `print` | `print`, or `screen` to keep a page's on-screen styles                  |
+| `waitUntil`  | `load`  | `load`, `domcontentloaded`, or `networkidle` for pages that load late   |
 
 ### Errors
 
@@ -81,15 +81,15 @@ Errors come back as JSON with a short `error` code, a readable `message`, and th
 { "error": "unsupported_type", "message": "Could not tell what kind of file this is…", "requestId": "…" }
 ```
 
-| Status | When                                                                                   |
-| ------ | -------------------------------------------------------------------------------------- |
-| 400    | a malformed request or bad options                                                     |
-| 401    | an API key is set and the request did not send it                                      |
-| 413    | the upload is over `TOPDF_MAX_BODY_MB`, or has more than `TOPDF_MAX_FILES` files        |
-| 415    | the file type is unknown or not supported                                              |
+| Status | When                                                                                            |
+| ------ | ----------------------------------------------------------------------------------------------- |
+| 400    | a malformed request or bad options                                                              |
+| 401    | an API key is set and the request did not send it                                               |
+| 413    | the upload is over `TOPDF_MAX_BODY_MB`, or has more than `TOPDF_MAX_FILES` files                |
+| 415    | the file type is unknown or not supported                                                       |
 | 422    | the input was understood but could not be converted: a broken file, or a page answering 4xx/5xx |
-| 503    | the server is busy past `TOPDF_QUEUE_TIMEOUT_MS`, or Chromium could not start          |
-| 504    | a conversion took longer than `TOPDF_TIMEOUT_MS`                                       |
+| 503    | the server is busy past `TOPDF_QUEUE_TIMEOUT_MS`, or Chromium could not start                   |
+| 504    | a conversion took longer than `TOPDF_TIMEOUT_MS`                                                |
 
 ### Health
 
@@ -103,16 +103,16 @@ Errors come back as JSON with a short `error` code, a readable `message`, and th
 
 Every setting is an environment variable, and every one has a default.
 
-| Variable                      | Default   | What it does                                                                       |
-| ----------------------------- | --------- | ---------------------------------------------------------------------------------- |
-| `PORT` / `HOST`               | `8080` / `0.0.0.0` | where the server listens                                                  |
-| `TOPDF_API_KEY`               | unset     | when set, `/convert` needs `Authorization: Bearer <key>` or `X-API-Key: <key>`      |
-| `TOPDF_MAX_BODY_MB`           | `25`      | the largest upload, across all its files                                           |
-| `TOPDF_MAX_FILES`             | `20`      | the most files and URLs in one request                                             |
-| `TOPDF_TIMEOUT_MS`            | `60000`   | how long one input may take to load and print                                      |
-| `TOPDF_QUEUE_TIMEOUT_MS`      | `30000`   | how long a request waits for a free slot before getting `503`                       |
-| `TOPDF_BROWSER_CONCURRENCY`   | `4`       | pages printed at once (one Chromium, one isolated context per page)                 |
-| `TOPDF_LOG_LEVEL`             | `info`    | `fatal`, `error`, `warn`, `info`, `debug`, `trace` or `silent`; logs are JSON lines |
+| Variable                    | Default            | What it does                                                                        |
+| --------------------------- | ------------------ | ----------------------------------------------------------------------------------- |
+| `PORT` / `HOST`             | `8080` / `0.0.0.0` | where the server listens                                                            |
+| `TOPDF_API_KEY`             | unset              | when set, `/convert` needs `Authorization: Bearer <key>` or `X-API-Key: <key>`      |
+| `TOPDF_MAX_BODY_MB`         | `25`               | the largest upload, across all its files                                            |
+| `TOPDF_MAX_FILES`           | `20`               | the most files and URLs in one request                                              |
+| `TOPDF_TIMEOUT_MS`          | `60000`            | how long one input may take to load and print                                       |
+| `TOPDF_QUEUE_TIMEOUT_MS`    | `30000`            | how long a request waits for a free slot before getting `503`                       |
+| `TOPDF_BROWSER_CONCURRENCY` | `4`                | pages printed at once (one Chromium, one isolated context per page)                 |
+| `TOPDF_LOG_LEVEL`           | `info`             | `fatal`, `error`, `warn`, `info`, `debug`, `trace` or `silent`; logs are JSON lines |
 
 ## Security
 
@@ -127,6 +127,8 @@ topdf is meant to run as an internal service, for clients you trust. The pages i
 ```sh
 npm run dev         # watch mode
 npm run typecheck   # the server and the tests
+npm run lint        # ESLint
+npm run format      # Prettier; CI fails on unformatted code (`npm run format:check`)
 npm test            # unit tests, plus real Chromium conversions when it is installed
 ```
 

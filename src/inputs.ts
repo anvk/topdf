@@ -50,8 +50,11 @@ export async function parseRequest(request: FastifyRequest, limits: ParseLimits)
 
 export function parseJson(body: Record<string, unknown>, query: Query = {}): ParsedRequest {
   const given = JSON_SOURCES.filter((key) => body[key] !== undefined)
-  const unknown = Object.keys(body).filter((key) => !(JSON_SOURCES as readonly string[]).includes(key) && key !== "options" && key !== "filename")
-  if (unknown.length > 0) throw badRequest(`Unknown field "${unknown[0]}". A JSON body takes one of ${JSON_SOURCES.join(", ")}, plus options and filename`)
+  const unknown = Object.keys(body).filter(
+    (key) => !(JSON_SOURCES as readonly string[]).includes(key) && key !== "options" && key !== "filename",
+  )
+  if (unknown.length > 0)
+    throw badRequest(`Unknown field "${unknown[0]}". A JSON body takes one of ${JSON_SOURCES.join(", ")}, plus options and filename`)
   if (given.length !== 1) throw badRequest(`A JSON body takes exactly one of ${JSON_SOURCES.join(", ")}`)
   const key = given[0]
   const value = body[key]

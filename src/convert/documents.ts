@@ -43,7 +43,7 @@ export function imageDocument(data: Buffer, mime: string): string {
 }
 
 export function decodeText(data: Buffer): string {
-  return data.toString("utf8").replace(/^﻿/, "")
+  return data.toString("utf8").replace(/^\uFEFF/, "")
 }
 
 export function escapeHtml(text: string): string {

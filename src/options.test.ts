@@ -18,7 +18,14 @@ test("later sources override earlier ones", () => {
 })
 
 test("bad values and unknown keys are refused", () => {
-  for (const bad of [{ paper: "A9" }, { margin: "1 cm; color: red" }, { scale: 5 }, { landscape: "maybe" }, { waitUntil: "forever" }, { colour: "red" }]) {
+  for (const bad of [
+    { paper: "A9" },
+    { margin: "1 cm; color: red" },
+    { scale: 5 },
+    { landscape: "maybe" },
+    { waitUntil: "forever" },
+    { colour: "red" },
+  ]) {
     assert.throws(() => parseOptions(bad), /must|Unknown option/, JSON.stringify(bad))
   }
 })

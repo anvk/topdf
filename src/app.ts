@@ -50,7 +50,9 @@ export async function buildApp({ config, renderer, stats }: AppDeps): Promise<Fa
     }
     const status = (error as { statusCode?: number }).statusCode
     if (status && status >= 400 && status < 500) {
-      return reply.status(status).send({ error: status === 413 ? "too_large" : "bad_request", message: errorMessage(error), requestId: request.id })
+      return reply
+        .status(status)
+        .send({ error: status === 413 ? "too_large" : "bad_request", message: errorMessage(error), requestId: request.id })
     }
     request.log.error({ err: error }, "conversion crashed")
     return reply.status(500).send({ error: "internal", message: "Something went wrong on the server", requestId: request.id })
@@ -89,8 +91,12 @@ function requireKey(key: string) {
   }
 }
 
+// Control characters, quotes and slashes cannot go in a Content-Disposition file name.
+// eslint-disable-next-line no-control-regex
+const UNSAFE_IN_FILENAME = /[\u0000-\u001f"\\/]/g
+
 export function pdfName(filename: string | undefined): string {
-  const base = filename ? path.basename(filename, path.extname(filename)).replace(/[\u0000-\u001f"\\/]/g, "").trim() : ""
+  const base = filename ? path.basename(filename, path.extname(filename)).replace(UNSAFE_IN_FILENAME, "").trim() : ""
   return `${base || "document"}.pdf`
 }
 

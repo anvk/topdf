@@ -23,13 +23,19 @@ test("no more than `size` tasks run at once, and the rest wait their turn", asyn
 test("a task that waits too long is refused with 503 and leaves the queue", async () => {
   const limiter = new Limiter(1, 20)
   const slow = limiter.run(() => tick(100))
-  await assert.rejects(limiter.run(async () => "late"), (error: unknown) => error instanceof HttpError && error.status === 503)
+  await assert.rejects(
+    limiter.run(async () => "late"),
+    (error: unknown) => error instanceof HttpError && error.status === 503,
+  )
   assert.equal(limiter.stats().queued, 0)
   await slow
 })
 
 test("a failing task frees its slot", async () => {
   const limiter = new Limiter(1, 1000)
-  await assert.rejects(limiter.run(async () => Promise.reject(new Error("boom"))), /boom/)
+  await assert.rejects(
+    limiter.run(async () => Promise.reject(new Error("boom"))),
+    /boom/,
+  )
   assert.equal(await limiter.run(async () => "next"), "next")
 })

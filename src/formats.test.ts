@@ -24,8 +24,11 @@ test("the first bytes decide when nothing else does", () => {
   assert.equal(detectFormat(text("%PDF-1.7\n")).format, "pdf")
   assert.deepEqual(detectFormat(PNG), { format: "image", mime: "image/png" })
   assert.deepEqual(detectFormat(Buffer.from([0xff, 0xd8, 0xff, 0xe0])), { format: "image", mime: "image/jpeg" })
-  assert.equal(detectFormat(text("﻿<!DOCTYPE html><p>x")).format, "html")
-  assert.deepEqual(detectFormat(text('<?xml version="1.0"?>\n<svg xmlns="http://www.w3.org/2000/svg"/>')), { format: "image", mime: "image/svg+xml" })
+  assert.equal(detectFormat(text("\uFEFF<!DOCTYPE html><p>x")).format, "html")
+  assert.deepEqual(detectFormat(text('<?xml version="1.0"?>\n<svg xmlns="http://www.w3.org/2000/svg"/>')), {
+    format: "image",
+    mime: "image/svg+xml",
+  })
   // octet-stream says nothing, so the bytes still decide.
   assert.equal(detectFormat(text("%PDF-1.4"), { contentType: "application/octet-stream" }).format, "pdf")
 })
@@ -40,5 +43,8 @@ test("an unknown file or type is refused with 415", () => {
   assert.throws(() => detectFormat(text("just some bytes")), is415)
   assert.throws(() => detectFormat(text("PK\u0003\u0004"), { filename: "report.docx" }), /\.docx files are not supported/)
   assert.throws(() => detectFormat(text("a,b"), { contentType: "text/csv" }), /text\/csv is not supported/)
-  assert.throws(() => detectFormat(PNG, { type: "spreadsheet" }), (error: unknown) => error instanceof HttpError && error.status === 415)
+  assert.throws(
+    () => detectFormat(PNG, { type: "spreadsheet" }),
+    (error: unknown) => error instanceof HttpError && error.status === 415,
+  )
 })

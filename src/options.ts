@@ -49,7 +49,8 @@ export function parseOptions(...sources: Record<string, unknown>[]): PdfOptions 
           break
         case "margin": {
           const margin = String(raw).trim()
-          if (!/^(0|\d+(\.\d+)?(mm|cm|in|px|pt))$/.test(margin)) throw badRequest('margin must be a length such as "0", "10mm", "1cm" or "0.5in"')
+          if (!/^(0|\d+(\.\d+)?(mm|cm|in|px|pt))$/.test(margin))
+            throw badRequest('margin must be a length such as "0", "10mm", "1cm" or "0.5in"')
           options.margin = margin
           break
         }
