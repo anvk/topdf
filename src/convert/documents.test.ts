@@ -21,5 +21,5 @@ test("an image is embedded as a data URI", () => {
 })
 
 test("a UTF-8 byte order mark is dropped", () => {
-  assert.equal(decodeText(Buffer.from("﻿hello")), "hello")
+  assert.equal(decodeText(Buffer.from("\uFEFFhello")), "hello")
 })

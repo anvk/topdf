@@ -7,9 +7,7 @@ import type { Renderer } from "./browser.js"
 import { decodeText, imageDocument, markdownDocument, textDocument } from "./documents.js"
 import { mergePdfs } from "./merge.js"
 
-export type Input =
-  | { format: "url"; url: string }
-  | { format: Exclude<Format, "url">; data: Buffer; filename?: string; mime?: string }
+export type Input = { format: "url"; url: string } | { format: Exclude<Format, "url">; data: Buffer; filename?: string; mime?: string }
 
 export async function convertInputs(inputs: Input[], options: PdfOptions, renderer: Renderer): Promise<Buffer> {
   const pdfs: Buffer[] = []

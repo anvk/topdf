@@ -61,7 +61,11 @@ test("Markdown, text and an image each print to one page", { skip }, async () =>
 })
 
 test("a long text runs onto more pages", { skip }, async () => {
-  const res = await convert({ method: "POST", url: "/convert?type=text", payload: Array.from({ length: 300 }, (_, i) => `line ${i}`).join("\n") })
+  const res = await convert({
+    method: "POST",
+    url: "/convert?type=text",
+    payload: Array.from({ length: 300 }, (_, i) => `line ${i}`).join("\n"),
+  })
   assert.ok((await pageCount(res.rawPayload)) > 1)
 })
 

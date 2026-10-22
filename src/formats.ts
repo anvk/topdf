@@ -82,7 +82,9 @@ export function detectFormat(data: Buffer, hints: DetectHints = {}): Detected {
     const known = "topdf converts HTML, Markdown, plain text, images and PDF"
     if (ext) throw unsupported(`${ext} files are not supported; ${known}`)
     if (mime && mime !== "application/octet-stream") throw unsupported(`${mime} is not supported; ${known}`)
-    throw unsupported(`Could not tell what kind of file this is. Give it a file name with an extension, a Content-Type, or a type parameter; ${known}`)
+    throw unsupported(
+      `Could not tell what kind of file this is. Give it a file name with an extension, a Content-Type, or a type parameter; ${known}`,
+    )
   }
 
   if (format === "image") {
@@ -108,7 +110,12 @@ function sniff(data: Buffer): (Detected & { format: Format }) | undefined {
   if (starts([0x52, 0x49, 0x46, 0x46]) && starts([0x57, 0x45, 0x42, 0x50], 8)) return { format: "image", mime: "image/webp" }
   if (starts([0x42, 0x4d])) return { format: "image", mime: "image/bmp" }
 
-  const head = data.subarray(0, 512).toString("utf8").replace(/^﻿/, "").trimStart().toLowerCase()
+  const head = data
+    .subarray(0, 512)
+    .toString("utf8")
+    .replace(/^\uFEFF/, "")
+    .trimStart()
+    .toLowerCase()
   if (/^(<\?xml[^>]*>\s*)?(<!--.*?-->\s*)*<svg[\s>]/s.test(head)) return { format: "image", mime: "image/svg+xml" }
   if (/^(<!doctype html|<html[\s>])/.test(head)) return { format: "html" }
   return undefined
